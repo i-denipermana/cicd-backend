@@ -57,10 +57,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |-
-          mvn versions:set -DnewVersion=$(echo ${GITHUB_SHA} | cut -c1-8)-SNAPSHOT
-          mvn versions:commit
-          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
       - uses: actions/upload-artifact@v2
         with:
           name: target
@@ -87,12 +84,11 @@ jobs:
         run: |-
           ls  -alh .
           docker build \
-            --tag "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA" \
-            --build-arg GITHUB_SHA="$GITHUB_SHA" \
+            --tag "gcr.io/$PROJECT_ID/$IMAGE"$(echo ${GITHUB_SHA} | cut -c1-8)" \
             .
       - name: Publish
         run: |-
-          docker push "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
+          docker push "gcr.io/$PROJECT_ID/$IMAGE:$(echo ${GITHUB_SHA} | cut -c1-8)"
   deploy:
     needs: [test,build,analyze]
     name: Deploy
