@@ -10,5 +10,4 @@ ENV ENV_PROFILE=$PROFILE
 
 COPY target .
 
-
-ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "backend-$GITHUB_SHA-SNAPSHOT.jar", "--spring.profiles.active=prod","-XX:MaxRAMPercentage=70","-XX:MinRAMPercentage=70"]
+ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "backend-${GITHUB_SHA}-SNAPSHOT.jar", "--spring.profiles.active=prod","-XX:MaxRAMPercentage=70","-XX:MinRAMPercentage=70"]
