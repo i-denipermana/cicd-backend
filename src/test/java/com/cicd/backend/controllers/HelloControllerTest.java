@@ -31,7 +31,7 @@ class HelloControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    public void whenPassingNameShouldReturnHelloMessage() throws Exception {
+    void whenPassingNameShouldReturnHelloMessage() throws Exception {
         mockMvc.perform(
                 get("/hello/{name}", "Mark Zuckerberg")
                 .contentType("application/json"))

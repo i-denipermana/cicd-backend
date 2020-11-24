@@ -19,6 +19,9 @@
         <sonar.projectKey>i-denipermana_cicd-backend</sonar.projectKey>
         <sonar.organization>i-denipermana</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.coverage.exclusions>
+            **/BackendApplication.java,
+            **/*TO*</sonar.coverage.exclusions>
     </properties>
 
     <dependencies>
