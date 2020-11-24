@@ -19,6 +19,12 @@ jobs:
           java-version: 11
       - name: Run test
         run: mvn clean verify
+      - name: Cache Maven packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
   build:
     name: Build
     runs-on: ubuntu-latest
