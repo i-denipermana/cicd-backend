@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: asia.gcr.io/PROJECT_ID/IMAGE:TAG
+          image: gcr.io/PROJECT_ID/IMAGE:TAG
           ports:
             - containerPort: 8080
               name: server
