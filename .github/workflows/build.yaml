@@ -8,8 +8,8 @@ on:
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: demo-cluster-1
-  GKE_ZONE: asia-southeast2-a       # TODO: update to cluster zone
-  DEPLOYMENT_NAME: backend # TODO: update to deployment name
+  GKE_ZONE: asia-southeast2-a
+  DEPLOYMENT_NAME: backend
   IMAGE: backend
 jobs:
   test:
@@ -72,19 +72,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
-        name: Download Artifacts
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
         with:
           name: target
-      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      - uses: google-github-actions/setup-gcloud@master
         with:
-          version: '290.0.1'
           service_account_key: ${{ secrets.GKE_SA_KEY }}
           project_id: ${{ secrets.GKE_PROJECT }}
       - run: |-
           gcloud --quiet auth configure-docker
       - name: Build
         run: |-
+          ls  -alh .
           docker build \
             --tag "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA" \
             --build-arg GITHUB_SHA="$GITHUB_SHA" \
