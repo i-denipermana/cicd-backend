@@ -55,7 +55,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
   deploy:
-    needs: [test,build]
+    needs: [test,analyze]
     name: Deploy
     runs-on: ubuntu-latest
     steps:
