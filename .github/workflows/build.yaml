@@ -64,7 +64,7 @@ jobs:
           path: target/
   build:
     needs: [ test,analyze ]
-    name: Build
+    name: Build & Push
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -82,9 +82,8 @@ jobs:
           gcloud --quiet auth configure-docker
       - name: Build
         run: |-
-          ls  -alh .
           docker build \
-            --tag "gcr.io/$PROJECT_ID/$IMAGE"$(echo ${GITHUB_SHA} | cut -c1-8)" \
+            --tag "gcr.io/$PROJECT_ID/$IMAGE:$(echo ${GITHUB_SHA} | cut -c1-8)" \
             .
       - name: Publish
         run: |-
