@@ -66,7 +66,7 @@ jobs:
     needs: [ test,analyze ]
     name: Build & Push
     runs-on: ubuntu-latest
-#    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -90,10 +90,12 @@ jobs:
         run: |-
           docker push "gcr.io/$PROJECT_ID/$IMAGE:$(echo ${GITHUB_SHA} | cut -c1-8)"
   deploy:
-    needs: [test,build,analyze]
+    needs: [ test,build,analyze ]
     name: Deploy
     runs-on: ubuntu-latest
-#    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+    env:
+      GKE_PROJECT: ${{ secrets.GKE_PROJECT }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -105,5 +107,8 @@ jobs:
       - run: |-
           gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
       - name: Deploy
-        run: |-
-          kubectl cluster-info
+        un: |-
+          ./kustomize edit set image asia.gcr.io/PROJECT_ID/IMAGE:TAG=asia.gcr.io/$PROJECT_ID/$IMAGE:$(echo ${GITHUB_SHA} | cut -c1-8)
+          ./kustomize build . | kubectl apply -f -
+          kubectl rollout status deployment/$DEPLOYMENT_NAME
+          kubectl get services -o wide
