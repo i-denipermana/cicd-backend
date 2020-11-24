@@ -5,6 +5,12 @@ on:
       - develop
   pull_request:
     types: [opened, synchronize, reopened]
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: demo-cluster-1
+  GKE_ZONE: ap-southeast2-a   # TODO: update to cluster zone
+  DEPLOYMENT_NAME: backend # TODO: update to deployment name
+  IMAGE: backend
 jobs:
   test:
     name: Test
@@ -18,7 +24,7 @@ jobs:
         with:
           java-version: 11
       - name: Run test
-        run: mvn clean verify
+        run: mvn -B clean verify
       - name: Cache Maven packages
         uses: actions/cache@v1
         with:
@@ -54,8 +60,37 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+      - uses: actions/upload-artifact@v2
+        with:
+          name: target
+          path: target/
+  build:
+    needs: [ test,analyze ]
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v2
+        name: Download Artifacts
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@0.1.3
+        with:
+          service_account_key: ${{ secrets.GKE_SA_KEY }}
+          project_id: ${{ secrets.GKE_PROJECT }}
+      - run: |-
+          gcloud --quiet auth configure-docker
+      - run: |-
+          gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
+      - name: Build
+        run: |-
+          docker build \
+            --tag "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA" \
+            --build-arg GITHUB_SHA="$GITHUB_SHA" \
+            --build-arg GITHUB_REF="$GITHUB_REF" \
+            .
+      - name: Publish
+        run: |-
+          docker push "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
   deploy:
-    needs: [test,analyze]
+    needs: [test,build,analyze]
     name: Deploy
     runs-on: ubuntu-latest
     steps:
