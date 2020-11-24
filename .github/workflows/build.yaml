@@ -8,7 +8,7 @@ on:
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: demo-cluster-1
-  GKE_ZONE: ap-southeast2-a   # TODO: update to cluster zone
+  GKE_ZONE: asia-southeast2-a       # TODO: update to cluster zone
   DEPLOYMENT_NAME: backend # TODO: update to deployment name
   IMAGE: backend
 jobs:
