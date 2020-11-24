@@ -2,7 +2,7 @@ name: Build
 on:
   push:
     branches:
-      - develop
+      - master
   pull_request:
     types: [opened, synchronize, reopened]
 env:
@@ -97,6 +97,7 @@ jobs:
     needs: [test,build,analyze]
     name: Deploy
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
     steps:
       - uses: actions/checkout@v2
         with:
