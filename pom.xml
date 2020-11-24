@@ -16,6 +16,9 @@
 
 	<properties>
 		<java.version>11</java.version>
+		<sonar.projectKey>deni-permana_cicd-backend</sonar.projectKey>
+		<sonar.organization>deni-permana</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 
 	<dependencies>
