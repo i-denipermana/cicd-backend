@@ -1,6 +1,5 @@
 package com.cicd.backend.services;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,13 +16,7 @@ class HelloServiceTest {
 
   @Test
   void testHelloServiceMethodNameShouldReturnAppendedName() {
-      String name = "Mark Zuckerberg";
-      assertEquals("Hello Mark Zuckerberg", this.helloService.helloName(name));
+    String name = "Mark Zuckerberg";
+    assertEquals("Hello Mark Zuckerberg", this.helloService.helloName(name));
   }
-
-    @Test
-    void testHelloServiceShouldReturnAppendedName() {
-        String name = "Mark Zuckerberg";
-        assertEquals("Hello Mark Zuckerberg", this.helloService.helloNameWorld(name));
-    }
 }
