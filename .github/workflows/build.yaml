@@ -66,6 +66,7 @@ jobs:
     needs: [ test,analyze ]
     name: Build & Push
     runs-on: ubuntu-latest
+#    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -101,6 +102,8 @@ jobs:
         with:
           service_account_key: ${{ secrets.GKE_SA_KEY }}
           project_id: ${{ secrets.GKE_PROJECT }}
+      - run: |-
+          gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
       - name: Deploy
         run: |-
           kubectl cluster-info
