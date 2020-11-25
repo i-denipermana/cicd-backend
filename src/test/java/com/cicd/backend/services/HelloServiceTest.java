@@ -17,6 +17,11 @@ class HelloServiceTest {
   @Test
   void testHelloServiceMethodNameShouldReturnAppendedName() {
     String name = "Mark Zuckerberg";
-    assertEquals("Hello Mark Zuckerberg", this.helloService.helloName(name));
+    assertEquals("Hello Mark Zuckerberg", this.helloService.sayHelloTo(name));
+  }
+
+  @Test
+  void testWelcomeMessageShouldReturnString() {
+    assertEquals("Welcome", this.helloService.welcomeMessage());
   }
 }
