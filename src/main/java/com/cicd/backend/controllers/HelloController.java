@@ -18,8 +18,14 @@ public class HelloController {
     this.helloService = helloService;
   }
 
+  @GetMapping()
+
+  public ResponseEntity<String> welcome() {
+    return ResponseEntity.ok(this.helloService.welcomeMessage());
+  }
+
   @GetMapping("/hello/{name}")
   public ResponseEntity<HelloTO> helloWorld(@PathVariable("name") String name) {
-    return ResponseEntity.ok(HelloTO.builder().message(helloService.helloName(name)).build());
+    return ResponseEntity.ok(HelloTO.builder().message(helloService.sayHelloTo(name)).build());
   }
 }
